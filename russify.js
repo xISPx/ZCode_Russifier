@@ -189,6 +189,30 @@ const menuSrc = readFile(menuChunk).toString('utf8');
 const menuRes = translateQuotedMap(menuSrc, translations);
 console.log('Нативное меню: переведено ' + menuRes.translated + ' из ' + menuRes.total + ' пунктов');
 
+// ---------- automation/offPeak templates (server-side {cn,en} pairs, rendered via m4) ----------
+let stylesChunk = null;
+(function walkStyles(node, prefix) {
+  for (const [name, child] of Object.entries(node.files || {})) {
+    const p = prefix + '/' + name;
+    if (child.files) walkStyles(child, p);
+    else if (p.startsWith('/out/renderer/assets/') && /^styles-.*\.js$/.test(name)) stylesChunk = p;
+  }
+})(header, '');
+let stylesText = readFile(stylesChunk).toString('utf8');
+const M4_FIND = 'function m4(e,t){let n=t?.startsWith(`zh`)??!1,r=n?e.cn:e.en,i=n?e.en:e.cn;return r?.trim()||i?.trim()||``}';
+const M4_REP = `function m4(e,t){let n=t?.startsWith(\`zh\`)??!1,r=n?e.cn:e.en,i=n?e.en:e.cn;if(!n&&r){let _x=r.trim();if(_x){let _m={"Standup Git Summary":"Сводка Git для стендапа","CI Failures & Flaky Test Report":"Отчёт по падениям CI и нестабильным тестам","Documentation sync check":"Проверка актуальности документации","Morning dev brief":"Утренняя сводка разработчику","Risk scan":"Скан рисков","Release brief":"Релизная сводка"};if(_m[_x])return _m[_x];let _p=[["Summarize this week's git activity into a Friday standup","Соберёт git-активность недели к пятничному стендапу: ключевые коммиты, влитые PR и что изменилось — коротко и по делу."],["Scan recent CI runs, list failing and flaky tests","Просмотрит недавние прогоны CI, перечислит упавшие и нестабильные тесты с вероятными причинами и предложит исправления по важности."],["Using the current implementation and recent commits as evidence","Сверит README, документацию и конфигурации с фактическим кодом и свежими коммитами, отметит расхождения."],["Summarize commits, module changes, CI status, and follow-ups since the previous workday","Резюмирует коммиты, изменения модулей, статус CI и незакрытые вопросы с прошлого рабочего дня — в заданный лимит объёма."],["Inspect code changes from the last 24 hours for high-confidence risks","Изучит изменения кода за последние 24 часа и найдёт риски: сбои рантайма, потерю данных, проблемы безопасности."],["Organize PRs and commits merged this week","Разложит PR и коммиты недели по разделам: фичи, исправления, улучшения опыта и инженерия."],["Compare code, configuration, API, and documentation changes from the last seven days","Сравнит изменения кода, конфигураций, API и документации за семь дней и подсветит расхождения."]];for(let _z of _p){if(_x.startsWith(_z[0]))return _z[1]}}}return r?.trim()||i?.trim()||\`\`}`;
+{
+  const parts = stylesText.split(M4_FIND);
+  if (parts.length === 2) {
+    stylesText = parts.join(M4_REP);
+    console.log('Шаблоны автоматизаций: патч выбора языка m4 применён');
+  } else if (stylesText.includes('"Сводка Git для стендапа"')) {
+    console.log('Шаблоны автоматизаций: m4 уже пропатчен');
+  } else {
+    console.log('Шаблоны автоматизаций: функция m4 не найдена — карточки шаблонов останутся английскими');
+  }
+}
+
 // ---------- main-process dialogs ----------
 const DOLLAR = String.fromCharCode(36);
 const mainReplacements = [
@@ -242,6 +266,7 @@ const changed = new Map([
   [intlChunk, Buffer.from(newIntlSrc, 'utf8')],
   [menuChunk, Buffer.from(menuRes.text, 'utf8')],
   [mainChunk, Buffer.from(mainText, 'utf8')],
+  [stylesChunk, Buffer.from(stylesText, 'utf8')],
 ]);
 const newEntries = [];
 let appendOffset = fileSize - contentStart;
