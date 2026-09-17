@@ -31,9 +31,13 @@ if (!fs.existsSync(ASAR)) {
 }
 
 // ---------- load translations ----------
+// works both from the repo layout (translations/) and from a flat
+// self-extracting package where the dictionaries sit next to the script
+let translDir = path.join(__dirname, 'translations');
+if (!fs.existsSync(translDir)) translDir = __dirname;
 const translations = {};
-for (const f of fs.readdirSync(TRANSL_DIR).filter((n) => n.endsWith('.json')).sort()) {
-  Object.assign(translations, JSON.parse(fs.readFileSync(path.join(TRANSL_DIR, f), 'utf8')));
+for (const f of fs.readdirSync(translDir).filter((n) => /^ru-.*\.json$/.test(n)).sort()) {
+  Object.assign(translations, JSON.parse(fs.readFileSync(path.join(translDir, f), 'utf8')));
 }
 
 // ---------- read asar ----------
