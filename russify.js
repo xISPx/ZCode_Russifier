@@ -202,10 +202,16 @@ let stylesText = readFile(stylesChunk).toString('utf8');
 const M4_FIND = 'function m4(e,t){let n=t?.startsWith(`zh`)??!1,r=n?e.cn:e.en,i=n?e.en:e.cn;return r?.trim()||i?.trim()||``}';
 const M4_REP = `function m4(e,t){let n=t?.startsWith(\`zh\`)??!1,r=n?e.cn:e.en,i=n?e.en:e.cn;if(!n&&r){let _x=r.trim();if(_x){let _m={"Standup Git Summary":"Сводка Git для стендапа","CI Failures & Flaky Test Report":"Отчёт по падениям CI и нестабильным тестам","Documentation sync check":"Проверка актуальности документации","Morning dev brief":"Утренняя сводка разработчику","Risk scan":"Скан рисков","Release brief":"Релизная сводка"};if(_m[_x])return _m[_x];let _p=[["Summarize this week's git activity into a Friday standup","Соберёт git-активность недели к пятничному стендапу: ключевые коммиты, влитые PR и что изменилось — коротко и по делу."],["Scan recent CI runs, list failing and flaky tests","Просмотрит недавние прогоны CI, перечислит упавшие и нестабильные тесты с вероятными причинами и предложит исправления по важности."],["Using the current implementation and recent commits as evidence","Сверит README, документацию и конфигурации с фактическим кодом и свежими коммитами, отметит расхождения."],["Summarize commits, module changes, CI status, and follow-ups since the previous workday","Резюмирует коммиты, изменения модулей, статус CI и незакрытые вопросы с прошлого рабочего дня — в заданный лимит объёма."],["Inspect code changes from the last 24 hours for high-confidence risks","Изучит изменения кода за последние 24 часа и найдёт риски: сбои рантайма, потерю данных, проблемы безопасности."],["Organize PRs and commits merged this week","Разложит PR и коммиты недели по разделам: фичи, исправления, улучшения опыта и инженерия."],["Compare code, configuration, API, and documentation changes from the last seven days","Сравнит изменения кода, конфигураций, API и документации за семь дней и подсветит расхождения."]];for(let _z of _p){if(_x.startsWith(_z[0]))return _z[1]}}}return r?.trim()||i?.trim()||\`\`}`;
 {
+  // the helper's name and locals change between builds (m4, e4, ...) — match by shape
+  const m4re = /function ([A-Za-z0-9_$]+)\(e,t\)\{let ([A-Za-z0-9_$]+)=t\?\.startsWith\(`zh`\)\?\?!1,([A-Za-z0-9_$]+)=\2\?e\.cn:e\.en,([A-Za-z0-9_$]+)=\2\?e\.en:e\.cn;return \3\?\.trim\(\)\|\|\4\?\.trim\(\)\|\|``\}/;
   const parts = stylesText.split(M4_FIND);
+  const m4m = parts.length === 2 ? null : stylesText.match(m4re);
   if (parts.length === 2) {
     stylesText = parts.join(M4_REP);
     console.log('Шаблоны автоматизаций: патч выбора языка m4 применён');
+  } else if (m4m) {
+    stylesText = stylesText.replace(m4m[0], () => M4_REP.replace('function m4(', 'function ' + m4m[1] + '('));
+    console.log('Шаблоны автоматизаций: патч выбора языка (' + m4m[1] + ') применён');
   } else if (stylesText.includes('"Сводка Git для стендапа"')) {
     console.log('Шаблоны автоматизаций: m4 уже пропатчен');
   } else {
