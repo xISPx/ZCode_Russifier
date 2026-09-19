@@ -1,5 +1,7 @@
 # ZCode Russifier — русификатор ZCode Desktop
 
+**Русский | [English](README.en.md)**
+
 [![Release](https://img.shields.io/github/v/release/xISPx/zcode-russifier)](https://github.com/xISPx/zcode-russifier/releases)
 [![Platform](https://img.shields.io/badge/platform-Windows-blue)](https://github.com/xISPx/zcode-russifier)
 [![Node](https://img.shields.io/badge/node-18%2B-green)](https://nodejs.org/)
@@ -100,8 +102,11 @@ iexpress /N installer\russifier.sed
 ## Структура репозитория
 
 ```
-russify.js          — скрипт русификации (запускать его)
-translations/       — словари перевода (JSON: ключ → русская строка)
+russify.js           — скрипт русификации (запускать его)
+run.cmd              — то же самое двойным щелчком (нужен Node в PATH)
+translations/        — словари перевода (JSON: ключ → русская строка)
+installer/           — рецепт сборки setup-.exe (IExpress)
+screenshots/         — иллюстрации для README
 ```
 
 Словари можно пополнять: возьмите недостающий ключ из каталога (скрипт печатает общее число строк) и добавьте `"ключ": "перевод"` в любой JSON из `translations/`. Переводится только интерфейс; строки для модели сознательно оставлены английскими.
