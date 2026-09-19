@@ -1,6 +1,14 @@
 # ZCode Russifier — русификатор ZCode Desktop
 
+[![Release](https://img.shields.io/github/v/release/xISPx/zcode-russifier)](https://github.com/xISPx/zcode-russifier/releases)
+[![Platform](https://img.shields.io/badge/platform-Windows-blue)](https://github.com/xISPx/zcode-russifier)
+[![Node](https://img.shields.io/badge/node-18%2B-green)](https://nodejs.org/)
+[![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
+[![ZCode](https://img.shields.io/badge/ZCode-3.11%20%E2%80%93%203.14%2B-orange)](https://zcode.z.ai)
+
 Неофициальный русификатор интерфейса [ZCode Desktop](https://zcode.z.ai) (десктопное приложение ZCode для Windows). Приложение официально поддерживает только английский и китайский языки; этот скрипт добавляет русский, заменяя английские строки интерфейса на русские прямо внутри `app.asar`.
+
+> **EN summary:** unofficial Russian UI translation (russifier) for ZCode Desktop on Windows. It patches `app.asar` so the built-in English locale renders in Russian — 6100 of 6114 UI strings translated. Requires Node.js 18+: `node russify.js`. Rollback: update or reinstall ZCode.
 
 **Переведено 6100 из 6114 строк каталога интерфейса (v3.14.0) — по сути полный перевод.** Не русифицированы намеренно только: названия тарифов (Lite, Pro, Max), подписи языков в переключателе и строки, уходящие модели (описания навыков, служебные промпты агента). Основные разделы:
 
@@ -54,6 +62,8 @@ node russify.js "D:\Programs\ZCode"
 ```
 
 Закрывать ZCode перед запуском **не обязательно**: скрипт умеет перезаписывать архив поверх работающего приложения (русский появится после перезапуска).
+
+В Windows можно просто дважды щёлкнуть `run.cmd` — он делает то же самое, что и `node russify.js` (нужен Node в PATH).
 
 ### Установщик .exe (для своих сборок)
 
