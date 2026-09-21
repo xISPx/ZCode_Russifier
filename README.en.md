@@ -8,8 +8,6 @@
 
 **[Русский](README.md) | English**
 
-🗣 **Community: [r/ZCodeRU](https://www.reddit.com/r/ZCodeRU/)** — Russian-language ZCode subreddit: news, the russifier, questions and answers.
-
 Unofficial Russian UI translation (russifier) for [ZCode Desktop](https://zcode.z.ai), the Windows desktop app. The app officially ships with English and Chinese only; this script adds Russian by rewriting the English UI strings inside `app.asar`.
 
 ![ZCode settings after russification: interface language — Russian](screenshots/settings-ru.png)
