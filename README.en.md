@@ -24,7 +24,7 @@ Unofficial Russian UI translation (russifier) for [ZCode Desktop](https://zcode.
 - SSH and WSL connections, the native menu, update dialogs and About;
 - Git panel and Git graph, repo wiki, model trajectory, whiteboards, feedback center, conversation sharing, resource manager.
 
-> Strings that are sent **to the model** (skill descriptions, agent service prompts) stay English on purpose — it keeps the AI working at full quality. Brand names (Lite, Pro, Telegram…) stay as-is too.
+> Strings that are sent **to the model** (skill descriptions, agent service prompts) stay English on purpose — it keeps the AI working at full quality. Plan tier names are translated (Лайт / Про / Макс); service and channel names (Telegram, Feishu…) stay as-is.
 
 > ⚠️ **Important**
 > - This modifies application files — use at your own risk.
