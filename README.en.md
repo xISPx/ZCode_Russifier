@@ -30,7 +30,7 @@ Unofficial Russian UI translation (russifier) for [ZCode Desktop](https://zcode.
 > - This modifies application files — use at your own risk.
 > - **ZCode auto-updates wipe the russification.** Just run the script again after every update.
 > - Roll back any time: update or reinstall ZCode — its installer restores the original `app.asar`.
-> - Tested on **3.11.2, 3.12.3, 3.14.0 and 3.14.1 (Windows x64)**. The script locates chunks by pattern, so nearby versions usually work too; it will tell you if the structure changed too much.
+> - Tested on **3.11.2, 3.12.3, 3.14.0–3.14.3 (Windows x64)**. The script locates chunks by pattern, so nearby versions usually work too; it will tell you if the structure changed too much.
 
 ---
 

@@ -1,0 +1,7 @@
+{
+  "chat.toolCall.workflow.timeline.roster.unlisted.one": "Ещё 1 агент не показан",
+  "chat.toolCall.workflow.timeline.roster.unlisted.many": "Агентов не показано: {count}",
+  "chat.toolCall.workflow.run.truncated": "Детали показаны для {shown} из {total} шагов",
+  "chat.toolCall.workflow.run.settings.consequence.concurrencyLive": "Применится к текущему запуску сразу; новый запуск не создаётся.",
+  "chat.toolCall.workflow.run.event.runCapsChanged": "Лимит параллельности {previous} → {next}"
+}
