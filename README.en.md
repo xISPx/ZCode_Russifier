@@ -12,7 +12,7 @@ Unofficial Russian UI translation (russifier) for [ZCode Desktop](https://zcode.
 
 ![ZCode settings after russification: interface language — Russian](screenshots/settings-ru.png)
 
-**6100 of 6114 catalog strings translated (v3.14.0) — effectively a full translation.** Intentionally left untranslated: plan tier names (Lite, Pro, Max), language labels in the switcher, and strings sent to the model (skill descriptions, agent service prompts). Covered sections:
+**All 6119 catalog strings translated (v3.14.3) — 100% coverage.** The only intentionally English strings are model-facing ones: skill descriptions and agent service prompts (translating them hurts AI quality). Covered sections:
 
 - sidebar, task list and task groups;
 - chat: composer, message actions, greetings, preview cards, tool-call cards, queues, quotas, permissions, Computer Use;

@@ -10,7 +10,7 @@
 
 Неофициальный русификатор интерфейса [ZCode Desktop](https://zcode.z.ai) (десктопное приложение ZCode для Windows). Приложение официально поддерживает только английский и китайский языки; этот скрипт добавляет русский, заменяя английские строки интерфейса на русские прямо внутри `app.asar`.
 
-> **EN summary:** unofficial Russian UI translation (russifier) for ZCode Desktop on Windows. It patches `app.asar` so the built-in English locale renders in Russian — 6100 of 6114 UI strings translated. Requires Node.js 18+: `node russify.js`. Rollback: update or reinstall ZCode.
+> **EN summary:** unofficial Russian UI translation (russifier) for ZCode Desktop on Windows. It patches `app.asar` so the built-in English locale renders in Russian — all 6119 UI strings translated (100% coverage). Requires Node.js 18+: `node russify.js`. Rollback: update or reinstall ZCode.
 
 ![Настройки ZCode после русификации: язык интерфейса — Русский](screenshots/settings-ru.png)
 
