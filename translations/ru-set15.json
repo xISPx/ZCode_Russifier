@@ -324,7 +324,7 @@
   "chat.composer.backgroundWorks.tooltipTerminal": "Открыть работающие терминалы",
   "chat.composer.backgroundWorks.tooltipAgent": "Открыть работающих агентов",
   "chat.composer.backgroundWorks.tooltipMixed": "Открыть работающие терминалы и агентов",
-  "chat.composer.backgroundWorks.ariaLabel": "Открыть фоновые задачи: Bash — {bashCount}, субагентов — {subagentCount}, всего {count}",
+  "chat.composer.backgroundWorks.ariaLabel": "Открыть фоновые задачи: Bash — {bashCount}, субагентов — {subagentCount}, workflow — {workflowCount}, всего {count}",
   "chat.summaryPanel.goalIterationValue": "Итерация {count}",
   "chat.summaryPanel.todoGoalIterationGroup": "Итерация {count}",
   "chat.summaryPanel.todoSessionGroup": "Сессия",

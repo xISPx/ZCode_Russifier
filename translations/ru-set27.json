@@ -1,0 +1,15 @@
+{
+  "settings.modelProvider.codingPlan.enterprise.tier.lite": "Лайт",
+  "settings.modelProvider.codingPlan.enterprise.tier.pro": "Про",
+  "settings.modelProvider.codingPlan.enterprise.tier.max": "Макс",
+  "settings.modelProvider.codingPlan.zai.plan.lite.name": "Лайт",
+  "settings.modelProvider.codingPlan.zai.plan.pro.name": "Про",
+  "settings.modelProvider.codingPlan.zai.plan.max.name": "Макс",
+  "settings.modelProvider.codingPlan.bigmodel.plan.lite.name": "Лайт",
+  "settings.modelProvider.codingPlan.bigmodel.plan.pro.name": "Про",
+  "settings.modelProvider.codingPlan.bigmodel.plan.max.name": "Макс",
+  "settings.modelProvider.codingPlan.purchase.fromPriceSuffix": "",
+  "settings.locale.zh-CN": "Китайский (упрощённый)",
+  "settings.memory.viewer.updated.weekdayZh": "нед. {weekday}",
+  "automations.form.schedule.minuteSuffix": ""
+}
