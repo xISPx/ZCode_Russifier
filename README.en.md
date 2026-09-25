@@ -12,7 +12,7 @@ Unofficial Russian UI translation (russifier) for [ZCode Desktop](https://zcode.
 
 ![ZCode settings after russification: interface language — Russian](screenshots/settings-ru.png)
 
-**All 6119 catalog strings translated (v3.14.3) — 100% coverage.** The only intentionally English strings are model-facing ones: skill descriptions and agent service prompts (translating them hurts AI quality). Covered sections:
+**All 6119 catalog strings translated (v3.14.3) — 100% coverage.** Server-driven campaign popups (e.g. the "Entitlement Rules" quota-coefficient dialog) are translated too — their text arrives from the Z.ai API, so the russifier maps it at render time. The only intentionally English strings are model-facing ones: skill descriptions and agent service prompts (translating them hurts AI quality). Covered sections:
 
 - sidebar, task list and task groups;
 - chat: composer, message actions, greetings, preview cards, tool-call cards, queues, quotas, permissions, Computer Use;
