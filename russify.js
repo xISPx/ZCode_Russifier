@@ -223,6 +223,24 @@ const M4_REP = `function m4(e,t){let n=t?.startsWith(\`zh\`)??!1,r=n?e.cn:e.en,i
   }
 }
 
+// ---------- server-driven campaign popups (Entitlement Rules etc.) ----------
+// The popup text comes from the Z.ai API already localized (zh-CN/en-US only);
+// patch the marketing-touch store to map known English strings to Russian
+// right after the deliveries query resolves.
+const POPUP_FIND = 'let u=await e.query();if(n||l!==r)return;';
+const POPUP_REP = 'let u=await e.query();try{let _m={"Entitlement Rules":"Правила применения квоты","When you use GLM through Coding Plan in ZCode, quota consumption is converted at a 0.67 coefficient throughout the campaign period.":"При использовании GLM через Coding Plan в ZCode расход квоты пересчитывается с коэффициентом 0,67 в течение всей акции.","In other words, the same model usage only deducts 67% from quota. Effectively, your available quota during the campaign is about 1.5x the original amount.":"Иначе говоря, за то же использование модели списывается только 67% квоты. Фактически доступная квота во время акции — примерно в 1,5 раза больше исходной.","The conversion rules and end time of the quota benefit is subject to the official announcement.":"Правила пересчёта и срок действия бонусной квоты определяются официальным анонсом.","Got it":"Понятно","I understand":"Я понимаю","Close":"Закрыть","OK":"ОК"};let _t=x=>{if(typeof x!==\'string\')return x;let _y=x.trim();return _m[_y]!==undefined?_m[_y]:x};u.deliveries=(u.deliveries||[]).map(d=>{if(d&&d.dialog){d.dialog.title=_t(d.dialog.title);if(d.dialog.description&&typeof d.dialog.description.text===\'string\'){d.dialog.description.text=d.dialog.description.text.split(/\\n\\n+/).map(p=>_t(p)).join(\'\\n\\n\')}if(Array.isArray(d.dialog.buttons))d.dialog.buttons.forEach(b=>{if(b)b.label=_t(b.label)})}return d})}catch{}if(n||l!==r)return;';
+{
+  const parts = stylesText.split(POPUP_FIND);
+  if (parts.length === 2) {
+    stylesText = parts.join(POPUP_REP);
+    console.log('Серверные попапы (акции): перехват перевода применён');
+  } else if (stylesText.includes('"Правила применения квоты"')) {
+    console.log('Серверные попапы (акции): перехват уже применён');
+  } else {
+    console.log('Серверные попапы (акции): точка перехвата не найдена — кампании останутся английскими');
+  }
+}
+
 // ---------- main-process dialogs ----------
 const DOLLAR = String.fromCharCode(36);
 const mainReplacements = [
