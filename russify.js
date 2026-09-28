@@ -244,6 +244,9 @@ const POPUP_REP = 'let u=await e.query();try{let _m={"Entitlement Rules":"Пра
 // ---------- main-process dialogs ----------
 const DOLLAR = String.fromCharCode(36);
 const mainReplacements = [
+  // editor-picker list built in the main process: the Explorer item name is a
+  // \u-escaped zh literal there, invisible to the i18n catalogs
+  ['{id:"explorer",name:"\\u8D44\\u6E90\\u7BA1\\u7406\\u5668"', '{id:"explorer",name:"Проводник"'],
   ['?"\\u786E\\u5B9A":"OK"]', '?"\\u786E\\u5B9A":"ОК"]'],
   [':["Cancel","OK"]}', ':["Отмена","ОК"]}'],
   ['buttons:["Open folder","Cancel"],title:"Open external ZCode link?",message:"Open this folder in ZCode?"',

@@ -12,7 +12,7 @@ Unofficial Russian UI translation (russifier) for [ZCode Desktop](https://zcode.
 
 ![ZCode settings after russification: interface language — Russian](screenshots/settings-ru.png)
 
-**All 6119 catalog strings translated (v3.14.3) — 100% coverage.** Server-driven campaign popups (e.g. the "Entitlement Rules" quota-coefficient dialog) are translated too — their text arrives from the Z.ai API, so the russifier maps it at render time. The only intentionally English strings are model-facing ones: skill descriptions and agent service prompts (translating them hurts AI quality). Covered sections:
+**All 6119 catalog strings translated (v3.14.3) — 100% coverage.** Server-driven campaign popups (e.g. the "Entitlement Rules" quota-coefficient dialog) are translated too — their text arrives from the Z.ai API, so the russifier maps it at render time. Strings outside the locale catalogs are patched as well: the «Проводник» (Explorer) item in the "open with…" editor picker is a literal in main-process code, and the script rewrites it. The only intentionally English strings are model-facing ones: skill descriptions and agent service prompts (translating them hurts AI quality). Covered sections:
 
 - sidebar, task list and task groups;
 - chat: composer, message actions, greetings, preview cards, tool-call cards, queues, quotas, permissions, Computer Use;
@@ -21,7 +21,7 @@ Unofficial Russian UI translation (russifier) for [ZCode Desktop](https://zcode.
 - **the entire Settings area**: model providers, MCP servers, Coding Plan and payments, skills, subagents, plugins, commands, hooks, browser, memory, indexing, Computer Use;
 - automations (scheduled tasks), idle-time tasks, and their template cards;
 - mobile remote control, bots page (Telegram / Weixin / Feishu / webhooks);
-- SSH and WSL connections, the native menu, update dialogs and About;
+- SSH and WSL connections, the native menu, the "open with…" editor picker (Проводник / VS Code), update dialogs and About;
 - Git panel and Git graph, repo wiki, model trajectory, whiteboards, feedback center, conversation sharing, resource manager.
 
 > Strings that are sent **to the model** (skill descriptions, agent service prompts) stay English on purpose — it keeps the AI working at full quality. Plan tier names are translated (Лайт / Про / Макс); service and channel names (Telegram, Feishu…) stay as-is.
