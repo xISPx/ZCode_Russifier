@@ -12,7 +12,7 @@ Unofficial Russian UI translation (russifier) for [ZCode Desktop](https://zcode.
 
 ![ZCode settings after russification: interface language — Russian](screenshots/settings-ru.png)
 
-**All 6119 catalog strings translated (v3.14.3) — 100% coverage.** Server-driven campaign popups (e.g. the "Entitlement Rules" quota-coefficient dialog) are translated too — their text arrives from the Z.ai API, so the russifier maps it at render time. Strings outside the locale catalogs are patched as well: the «Проводник» (Explorer) item in the "open with…" editor picker is a literal in main-process code, and the script rewrites it. The only intentionally English strings are model-facing ones: skill descriptions and agent service prompts (translating them hurts AI quality). Covered sections:
+**All 6119 catalog strings translated (v3.14.5) — 100% coverage.** Server-driven campaign popups (e.g. the "Entitlement Rules" quota-coefficient dialog) are translated too — their text arrives from the Z.ai API, so the russifier maps it at render time. Strings outside the locale catalogs are patched as well: the «Проводник» (Explorer) item in the "open with…" editor picker is a literal in main-process code, and the script rewrites it. The only intentionally English strings are model-facing ones: skill descriptions and agent service prompts (translating them hurts AI quality). Covered sections:
 
 - sidebar, task list and task groups;
 - chat: composer, message actions, greetings, preview cards, tool-call cards, queues, quotas, permissions, Computer Use;
@@ -30,7 +30,7 @@ Unofficial Russian UI translation (russifier) for [ZCode Desktop](https://zcode.
 > - This modifies application files — use at your own risk.
 > - **ZCode auto-updates wipe the russification.** Just run the script again after every update.
 > - Roll back any time: update or reinstall ZCode — its installer restores the original `app.asar`.
-> - Tested on **3.11.2, 3.12.3, 3.14.0–3.14.3 (Windows x64)**. The script locates chunks by pattern, so nearby versions usually work too; it will tell you if the structure changed too much.
+> - Tested on **3.11.2, 3.12.3, 3.14.0–3.14.5 (Windows x64)**. The script locates chunks by pattern, so nearby versions usually work too; it will tell you if the structure changed too much.
 
 ---
 
