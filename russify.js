@@ -228,14 +228,53 @@ const M4_REP = `function m4(e,t){let n=t?.startsWith(\`zh\`)??!1,r=n?e.cn:e.en,i
 // patch the marketing-touch store to map known English strings to Russian
 // right after the deliveries query resolves.
 const POPUP_FIND = 'let u=await e.query();if(n||l!==r)return;';
-const POPUP_REP = 'let u=await e.query();try{let _m={"Entitlement Rules":"Правила применения квоты","When you use GLM through Coding Plan in ZCode, quota consumption is converted at a 0.67 coefficient throughout the campaign period.":"При использовании GLM через Coding Plan в ZCode расход квоты пересчитывается с коэффициентом 0,67 в течение всей акции.","In other words, the same model usage only deducts 67% from quota. Effectively, your available quota during the campaign is about 1.5x the original amount.":"Иначе говоря, за то же использование модели списывается только 67% квоты. Фактически доступная квота во время акции — примерно в 1,5 раза больше исходной.","The conversion rules and end time of the quota benefit is subject to the official announcement.":"Правила пересчёта и срок действия бонусной квоты определяются официальным анонсом.","Got it":"Понятно","I understand":"Я понимаю","Close":"Закрыть","OK":"ОК"};let _t=x=>{if(typeof x!==\'string\')return x;let _y=x.trim();return _m[_y]!==undefined?_m[_y]:x};u.deliveries=(u.deliveries||[]).map(d=>{if(d&&d.dialog){d.dialog.title=_t(d.dialog.title);if(d.dialog.description&&typeof d.dialog.description.text===\'string\'){d.dialog.description.text=d.dialog.description.text.split(/\\n\\n+/).map(p=>_t(p)).join(\'\\n\\n\')}if(Array.isArray(d.dialog.buttons))d.dialog.buttons.forEach(b=>{if(b)b.label=_t(b.label)})}return d})}catch{}if(n||l!==r)return;';
+// 3.15.x delivery schema: popups carry title/description/buttons in delivery.popup,
+// banners in delivery.banner.success_popup. Text lives in TWO shapes: legacy
+// strings / {description:{text}} AND content-service objects {title:{format,content}},
+// buttons[{text:{format,content}}] — the renderer converts them to formattedTitle/
+// formattedLabel at draw time, so the content fields must be translated in place.
+const POPUP_HANDLER =
+  'u.deliveries=(u.deliveries||[]).map(d=>{if(d){let _p=s=>{if(typeof s!==\'string\')return s;return s.split(/\\n\\n+/).map(p=>_t(p)).join(\'\\n\\n\')};let _r=o=>{if(!o||typeof o!==\'object\')return;if(typeof o.title===\'string\')o.title=_t(o.title);else if(o.title&&typeof o.title.content===\'string\')o.title.content=_p(o.title.content);if(typeof o.description===\'string\')o.description=_p(o.description);else if(o.description&&typeof o.description.text===\'string\')o.description.text=_p(o.description.text);else if(o.description&&typeof o.description.content===\'string\')o.description.content=_p(o.description.content);if(Array.isArray(o.buttons))o.buttons.forEach(b=>{if(!b||typeof b!==\'object\')return;if(typeof b.label===\'string\')b.label=_t(b.label);if(b.formattedLabel&&typeof b.formattedLabel.text===\'string\')b.formattedLabel.text=_t(b.formattedLabel.text);if(b.text&&typeof b.text.content===\'string\')b.text.content=_t(b.text.content)})};_r(d.dialog);_r(d.popup);if(d.banner)_r(d.banner.success_popup)}return d})';
+const POPUP_HANDLER_V2 =
+  'u.deliveries=(u.deliveries||[]).map(d=>{if(d){let _r=o=>{if(!o||typeof o!==\'object\')return;if(typeof o.title===\'string\')o.title=_t(o.title);if(typeof o.description===\'string\'){o.description=o.description.split(/\\n\\n+/).map(p=>_t(p)).join(\'\\n\\n\')}else if(o.description&&typeof o.description.text===\'string\'){o.description.text=o.description.text.split(/\\n\\n+/).map(p=>_t(p)).join(\'\\n\\n\')}if(Array.isArray(o.buttons))o.buttons.forEach(b=>{if(b)b.label=_t(b.label)})};_r(d.dialog);_r(d.popup);if(d.banner)_r(d.banner.success_popup)}return d})';
+const POPUP_HANDLER_V1 =
+  'if(d&&d.dialog){d.dialog.title=_t(d.dialog.title);if(d.dialog.description&&typeof d.dialog.description.text===\'string\'){d.dialog.description.text=d.dialog.description.text.split(/\\n\\n+/).map(p=>_t(p)).join(\'\\n\\n\')}if(Array.isArray(d.dialog.buttons))d.dialog.buttons.forEach(b=>{if(b)b.label=_t(b.label)})}return d})';
+const RU_DEBUG = false; // temporary: dump deliveries to localStorage for offline diagnosis
+const POPUP_HANDLER_DEBUG =
+  'try{let _err="";try{u.deliveries=(u.deliveries||[]).map(d=>{if(d){let _p=s=>{if(typeof s!==\'string\')return s;return s.split(/\\n\\n+/).map(p=>_t(p)).join(\'\\n\\n\')};let _r=o=>{if(!o||typeof o!==\'object\')return;if(typeof o.title===\'string\')o.title=_t(o.title);else if(o.title&&typeof o.title.content===\'string\')o.title.content=_p(o.title.content);if(typeof o.description===\'string\')o.description=_p(o.description);else if(o.description&&typeof o.description.text===\'string\')o.description.text=_p(o.description.text);else if(o.description&&typeof o.description.content===\'string\')o.description.content=_p(o.description.content);if(Array.isArray(o.buttons))o.buttons.forEach(b=>{if(!b||typeof b!==\'object\')return;if(typeof b.label===\'string\')b.label=_t(b.label);if(b.formattedLabel&&typeof b.formattedLabel.text===\'string\')b.formattedLabel.text=_t(b.formattedLabel.text);if(b.text&&typeof b.text.content===\'string\')b.text.content=_t(b.text.content)})};_r(d.dialog);_r(d.popup);if(d.banner)_r(d.banner.success_popup)}return d})}catch(e){_err=String(e)}try{let _j=x=>JSON.stringify(x,(k,v)=>typeof v===\'string\'?v.replace(/[^\\x20-\\x7E]/g,c=>\'\\u\'+c.codePointAt(0).toString(16)):v);localStorage.setItem(\'ru-debug\',_j({err:_err,dict:Object.keys(_m).length,deliveries:u.deliveries}).slice(0,150000))}catch{}}catch{}';
+const POPUP_MAP =
+  '{"Entitlement Rules":"Правила применения квоты","When you use GLM through Coding Plan in ZCode, quota consumption is converted at a 0.67 coefficient throughout the campaign period.":"При использовании GLM через Coding Plan в ZCode расход квоты пересчитывается с коэффициентом 0,67 в течение всей акции.","In other words, the same model usage only deducts 67% from quota. Effectively, your available quota during the campaign is about 1.5x the original amount.":"Иначе говоря, за то же использование модели списывается только 67% квоты. Фактически доступная квота во время акции — примерно в 1,5 раза больше исходной.","The conversion rules and end time of the quota benefit is subject to the official announcement.":"Правила пересчёта и срок действия бонусной квоты определяются официальным анонсом.","Got it":"Понятно","I understand":"Я понимаю","Close":"Закрыть","OK":"ОК"}';
+const POPUP_REP =
+  'let u=await e.query();try{let _m=' + POPUP_MAP + ';' +
+  'let _t=x=>{if(typeof x!==\'string\')return x;let _y=x.trim().replace(/\\u00A0/g,\' \');return _m[_y]!==undefined?_m[_y]:x};' +
+  (RU_DEBUG ? POPUP_HANDLER_DEBUG : POPUP_HANDLER) + '}catch{}if(n||l!==r)return;';
 {
   const parts = stylesText.split(POPUP_FIND);
   if (parts.length === 2) {
     stylesText = parts.join(POPUP_REP);
     console.log('Серверные попапы (акции): перехват перевода применён');
   } else if (stylesText.includes('"Правила применения квоты"')) {
-    console.log('Серверные попапы (акции): перехват уже применён');
+    if (stylesText.includes(POPUP_HANDLER_DEBUG)) {
+      if (!RU_DEBUG) {
+        stylesText = stylesText.replace(POPUP_HANDLER_DEBUG, POPUP_HANDLER);
+        console.log('Серверные попапы (акции): debug-дамп снят, производственный обработчик возвращён');
+      } else {
+        console.log('Серверные попапы (акции): debug-перехват уже применён');
+      }
+    } else if (stylesText.includes('localStorage.setItem(\'ru-debug\'')) {
+      console.log('Серверные попапы (акции): перехват на месте, но структура обработчика не распознана');
+    } else {
+      let migrated = '';
+      for (const old of [POPUP_HANDLER, POPUP_HANDLER_V2, POPUP_HANDLER_V1]) {
+        if (stylesText.includes(old)) {
+          stylesText = stylesText.replace(old, RU_DEBUG ? POPUP_HANDLER_DEBUG : POPUP_HANDLER);
+          migrated = old === POPUP_HANDLER ? 'v3' : old === POPUP_HANDLER_V2 ? 'v2' : 'v1';
+          break;
+        }
+      }
+      if (migrated) console.log('Серверные попапы (акции): обработчик мигрирован (v' + migrated + ')');
+      else console.log('Серверные попапы (акции): перехват на месте, но структура обработчика не распознана');
+    }
   } else {
     console.log('Серверные попапы (акции): точка перехвата не найдена — кампании останутся английскими');
   }
@@ -311,15 +350,26 @@ for (const n of newEntries) {
   n.e.integrity = n.integrity;
 }
 let headerJson = JSON.stringify(header);
-// pad with spaces so the header region keeps its original byte length —
-// then untouched files stay at their exact offsets and an in-place overwrite
-// remains safe even while ZCode is running.
+// Normally the header is padded to its original byte length so untouched files
+// keep their exact offsets and the patched archive can be written over a
+// running instance. If the header no longer fits (offset strings grew), fall
+// back to a full rebuild: the header keeps its natural size and the content
+// region is placed at the original absolute offset (zero filler before it), so
+// unchanged entries stay valid. The resulting layout differs from the original,
+// so this mode requires ZCode to be closed.
 const headerBudget = headerPickleSize - 8; // 4-byte length prefix + json + padding
-if (Buffer.byteLength(headerJson, 'utf8') > headerBudget) {
-  console.error('Заголовок вырос — закройте ZCode и запустите скрипт ещё раз (нужна простая замена файла).');
-  process.exit(1);
+let fullRebuild = Buffer.byteLength(headerJson, 'utf8') > headerBudget;
+if (fullRebuild) {
+  // natural-size header: the content region is copied verbatim right after it,
+  // so relative offsets of unchanged files stay exactly as they were — no
+  // adjustment needed. Only requirement: ZCode must be closed (rename swap).
+  const natural = Buffer.byteLength(headerJson, 'utf8');
+  const rem = (4 + natural) % 4;
+  if (rem) headerJson = headerJson.padEnd(natural + (4 - rem), ' ');
+  console.log('Заголовок вырос — полная пересборка архива (запускать при закрытом ZCode).');
+} else {
+  headerJson = headerJson.padEnd(headerBudget, ' ');
 }
-headerJson = headerJson.padEnd(headerBudget, ' ');
 const jsonLen = Buffer.byteLength(headerJson, 'utf8');
 const pad = 0; // jsonLen now equals headerBudget: 4 + jsonLen stays 4-aligned automatically
 if ((4 + jsonLen) % 4 !== 0) {
@@ -358,6 +408,13 @@ try {
   fs.renameSync(tmpPath, ASAR);
   console.log('Готово: патченный архив подменён. Перезапустите ZCode (если он был запущен).');
 } catch (e) {
+  if (fullRebuild) {
+    fs.unlinkSync(tmpPath);
+    fs.closeSync(fd);
+    console.error('Полная пересборка не смогла подменить архив — ZCode ещё запущен и держит файл.');
+    console.error('Закройте его полностью (иконка в трее → Выйти) и запустите скрипт снова.');
+    process.exit(1);
+  }
   // app is running and holds the file — overwrite in place (layout is offset-compatible)
   const t = fs.openSync(tmpPath, 'r');
   const target = fs.openSync(ASAR, 'r+');
