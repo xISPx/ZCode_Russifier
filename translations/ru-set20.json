@@ -120,7 +120,7 @@
   "remote.step.connect": "Подключить",
   "remote.step.selectDirectory": "Выбрать каталог",
   "remote.selectDirectoryTitle": "Выберите удалённый каталог",
-  "remote.selectDirectoryDescription": "Какой каталог открыть в этом окне после подключения.",
+  "remote.selectDirectoryDescription": "Выберите каталог на {method} как рабочее пространство.",
   "remote.backToConnection": "Назад к настройкам подключения",
   "remote.selectedMethod": "Выбранный способ",
   "remote.methods": "Способ подключения",

@@ -184,7 +184,7 @@
   "markdownImage.download": "Скачать изображение",
   "markdownImage.downloadFailed": "Не удалось скачать изображение",
   "markdownImage.downloadStarted": "Загрузка изображения началась",
-  "markdownImage.downloadSucceeded": "Изображение сохранено: {path}",
+  "markdownImage.downloadSucceeded": "Загрузка завершена",
   "diff.placeholder.badge": "Заглушка интерфейса",
   "diff.placeholder.description": "На этом этапе готова только оболочка правой панели Diff. Реальные Git-сервисы и выполнение команд подключат позже.",
   "diff.placeholder.toast": "Панель Diff пока работает в режиме заглушки — Git-сервис ещё не подключён полностью.",

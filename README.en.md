@@ -4,7 +4,7 @@
 [![Platform](https://img.shields.io/badge/platform-Windows-blue)](https://github.com/xISPx/zcode-russifier)
 [![Node](https://img.shields.io/badge/node-18%2B-green)](https://nodejs.org/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
-[![ZCode](https://img.shields.io/badge/ZCode-3.11%20%E2%80%93%203.15%2B-orange)](https://zcode.z.ai)
+[![ZCode](https://img.shields.io/badge/ZCode-3.11%20%E2%80%93%203.16%2B-orange)](https://zcode.z.ai)
 
 **[Русский](README.md) | English**
 
@@ -12,7 +12,7 @@ Unofficial Russian UI translation (russifier) for [ZCode Desktop](https://zcode.
 
 ![ZCode settings after russification: interface language — Russian](screenshots/settings-ru.png)
 
-**All 6354 catalog strings translated (v3.15.3) — 100% coverage.** Server-driven campaign popups (e.g. the "Entitlement Rules" quota-coefficient dialog) are translated too — their text arrives from the Z.ai API, so the russifier maps it at render time. Strings outside the locale catalogs are patched as well: the «Проводник» (Explorer) item in the "open with…" editor picker is a literal in main-process code, and the script rewrites it. The only intentionally English strings are model-facing ones: skill descriptions and agent service prompts (translating them hurts AI quality). Covered sections:
+**All 6974 catalog strings translated (v3.16.2) — 100% coverage.** Server-driven campaign popups (e.g. the "Entitlement Rules" quota-coefficient dialog) are translated too — their text arrives from the Z.ai API, so the russifier maps it at render time. Strings outside the locale catalogs are patched as well: the «Проводник» (Explorer) item in the "open with…" editor picker is a literal in main-process code, and the script rewrites it. The only intentionally English strings are model-facing ones: skill descriptions and agent service prompts (translating them hurts AI quality). Covered sections:
 
 - sidebar, task list and task groups;
 - chat: composer, message actions, greetings, preview cards, tool-call cards, queues, quotas, permissions, Computer Use;
@@ -30,7 +30,7 @@ Unofficial Russian UI translation (russifier) for [ZCode Desktop](https://zcode.
 > - This modifies application files — use at your own risk.
 > - **ZCode auto-updates wipe the russification.** Just run the script again after every update.
 > - Roll back any time: update or reinstall ZCode — its installer restores the original `app.asar`.
-> - Tested on **3.11.2, 3.12.3, 3.14.0–3.14.5, 3.15.1, 3.15.3 (Windows x64)**. The script locates chunks by pattern, so nearby versions usually work too; it will tell you if the structure changed too much.
+> - Tested on **3.11.2, 3.12.3, 3.14.0–3.14.5, 3.15.1, 3.15.3, 3.16.2 (Windows x64)**. The script locates chunks by pattern, so nearby versions usually work too; it will tell you if the structure changed too much.
 
 ---
 

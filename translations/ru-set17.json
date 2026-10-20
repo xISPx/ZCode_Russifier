@@ -80,7 +80,7 @@
   "conversationShare.issue.payloadSizeLimit": "Запрос публикации — {actual}, больше лимита {limit}. Уменьшите выбор ходов или файлов.",
   "conversationShare.issue.artifactManifest": "Манифест файлов дублируется или неполон. Пересоздайте файлы и обновите панель публикации.",
   "conversationShare.issue.uploadIncomplete": "Подтверждение загрузки {artifactDisplayName} не совпадает с файлом. Убедитесь, что он не менялся, и повторите.",
-  "conversationShare.issue.unknown": "Публикация не удалась на этапе «{phase}»; сервер не дал деталей. Попробуйте позже.",
+  "conversationShare.issue.unknown": "Публикация не удалась; причину установить не удалось. Повторите, и если не пройдёт — пришлите детали ошибки.",
   "conversationShare.issue.details": "Детали ошибки",
   "conversationShare.issue.requestIdLabel": "ID запроса сервера",
   "conversationShare.issue.requestId": "ID запроса сервера: {requestId}",
