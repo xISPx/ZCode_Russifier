@@ -4,15 +4,15 @@
 [![Platform](https://img.shields.io/badge/platform-Windows-blue)](https://github.com/xISPx/zcode-russifier)
 [![Node](https://img.shields.io/badge/node-18%2B-green)](https://nodejs.org/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
-[![ZCode](https://img.shields.io/badge/ZCode-3.11%20%E2%80%93%203.16%2B-orange)](https://zcode.z.ai)
+[![ZCode](https://img.shields.io/badge/ZCode-3.11%20%E2%80%93%203.18%2B-orange)](https://zcode.z.ai)
 
 **[Русский](README.md) | English**
 
-Unofficial Russian UI translation (russifier) for [ZCode Desktop](https://zcode.z.ai), the Windows desktop app. The app officially ships with English and Chinese only; this script adds Russian by rewriting the English UI strings inside `app.asar`.
+Unofficial russifier for [ZCode Desktop](https://zcode.z.ai), the Windows desktop app. Before 3.18 the app shipped only English and Chinese; this script added Russian by rewriting strings inside `app.asar`. Since 3.18 ZCode includes an **official Russian locale**, so the script switched to supplement mode: it patches only what the official locale misses — native menus (tray / title bar), main-process dialogs (updates, About), automation template cards and campaign popups.
 
 ![ZCode settings after russification: interface language — Russian](screenshots/settings-ru.png)
 
-**All 6974 catalog strings translated (v3.16.2) — 100% coverage.** Server-driven campaign popups (e.g. the "Entitlement Rules" quota-coefficient dialog) are translated too — their text arrives from the Z.ai API, so the russifier maps it at render time. Strings outside the locale catalogs are patched as well: the «Проводник» (Explorer) item in the "open with…" editor picker is a literal in main-process code, and the script rewrites it. The only intentionally English strings are model-facing ones: skill descriptions and agent service prompts (translating them hurts AI quality). Covered sections:
+**ZCode 3.18+ (current mode — supplement):** the UI itself is translated officially, enabled in **Settings → Language → Русский**; the script patches native menus (49/50 items), main-process dialogs (32/32), automation template cards and server campaign popups. **ZCode below 3.18 (full mode):** 6974 of 6974 catalog strings translated (v3.16.2) — 100% coverage. What the full mode covered:
 
 - sidebar, task list and task groups;
 - chat: composer, message actions, greetings, preview cards, tool-call cards, queues, quotas, permissions, Computer Use;
@@ -24,13 +24,12 @@ Unofficial Russian UI translation (russifier) for [ZCode Desktop](https://zcode.
 - SSH and WSL connections, the native menu, the "open with…" editor picker (Проводник / VS Code), update dialogs and About;
 - Git panel and Git graph, repo wiki, model trajectory, whiteboards, feedback center, conversation sharing, resource manager.
 
-> Strings that are sent **to the model** (skill descriptions, agent service prompts) stay English on purpose — it keeps the AI working at full quality. Plan tier names are translated (Лайт / Про / Макс); service and channel names (Telegram, Feishu…) stay as-is.
-
-> ⚠️ **Important**
+> Strings that are sent **to the model** (skill descriptions, agent service prompts) stay English on purpose — it keeps the AI working at full quality. Plan tier names are translated (Лайт / Про / Макс); service and channel names (Telegram, Feishu…) stay as-is.> ⚠️ **Important**
 > - This modifies application files — use at your own risk.
 > - **ZCode auto-updates wipe the russification.** Just run the script again after every update.
 > - Roll back any time: update or reinstall ZCode — its installer restores the original `app.asar`.
-> - Tested on **3.11.2, 3.12.3, 3.14.0–3.14.5, 3.15.1, 3.15.3, 3.16.2 (Windows x64)**. The script locates chunks by pattern, so nearby versions usually work too; it will tell you if the structure changed too much.
+> - Tested on **3.11.2, 3.12.3, 3.14.0–3.14.5, 3.15.1, 3.15.3, 3.16.2, 3.18.2 (Windows x64)**. The script locates chunks by pattern, so nearby versions usually work too; it will tell you if the structure changed too much.
+> - On ZCode 3.18+ remember to enable the official Russian: **Settings → Language → Русский** — the script does not switch it for you.
 
 ---
 
@@ -77,12 +76,14 @@ iexpress /N installer\russifier.sed
 
 ## How it works
 
-The app has exactly two UI locales — `en-US` and `zh-CN` — and hard logic "system language starts with zh → Chinese, otherwise English". There is no separate locale file; strings are compiled into minified code. So the russifier:
+The app has two base UI locales — `en-US` and `zh-CN` — and hard logic "system language starts with zh → Chinese, otherwise English". There is no separate locale file; strings are compiled into minified code. So the russifier:
 
-1. parses the `app.asar` header and locates the renderer string catalog (the `IntlProvider-*.js` chunk), the native menu map and the main-process dialogs;
-2. replaces English values with Russian ones from the `translations` folder (placeholders like `{count}` are validated — a translation with mismatched placeholders is dropped);
+1. parses the `app.asar` header and locates the target chunks: the native menu map, main-process dialogs, the renderer styles chunk (and, in full mode, the renderer string catalog `IntlProvider-*.js`);
+2. replaces values with Russian ones from the `translations` folder (placeholders like `{count}` are validated — a translation with mismatched placeholders is dropped);
 3. recomputes SHA-256 integrity for the changed files and appends them to the archive, keeping every other file at its original offset;
 4. swaps `app.asar` (if the running app holds the file, it overwrites in place — the old layout stays compatible). When the asar header outgrows its original region (happened in 3.15.3), the script performs a full rebuild of the archive instead — that requires ZCode to be closed, and the script says so.
+
+In supplement mode (ZCode 3.18+) the renderer catalog is not touched at all — the official translation lives in its own overlay above the English base and is enabled by the language setting.
 
 No need to touch the language setting in the app: the English locale itself is russified, and it is the default.
 
@@ -95,7 +96,7 @@ Any of these:
 
 ## After a ZCode update
 
-The russification is gone — expected. Grab the latest version of this repository and run `node russify.js` again. If the developers change the app structure significantly, the script will say so — watch the issues for russifier updates.
+The russification is gone — expected. Grab the latest version of this repository and run `node russify.js` again. On ZCode 3.18+ make sure the official Russian is enabled (**Settings → Language → Русский**). If the developers change the app structure significantly, the script will say so — watch the issues for russifier updates.
 
 ## Repository layout
 

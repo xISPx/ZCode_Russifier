@@ -1,11 +1,16 @@
 #!/usr/bin/env node
 /**
- * ZCode Russifier — adds a Russian UI to ZCode Desktop (Windows) by patching app.asar.
+ * ZCode Russifier — adds Russian to ZCode Desktop (Windows) by patching app.asar.
  *
- * How it works: the app ships exactly two UI locales (en-US / zh-CN). The en-US
- * string catalogs (renderer, native menu, main-process dialogs) are rewritten
- * in place with Russian translations from ./translations. Untouched files keep
- * their byte offsets, so a running instance keeps working until restart.
+ * Since ZCode 3.18 the app ships an official ru-RU locale (an overlay over the
+ * en-US catalog) selectable in Settings → Language. The renderer string catalog
+ * is therefore left untouched; this script now only patches what the official
+ * locale does not cover: native menus (tray / dock / title bar), main-process
+ * dialogs, and two small renderer-side bits (automation template cards and
+ * server campaign popups).
+ *
+ * Set SUPPLEMENT = false to restore the legacy behavior of translating the whole
+ * en-US catalog as well (needed only for pre-3.18 builds).
  *
  * Usage:   node russify.js [path-to-ZCode-install-dir]
  * Default install dir: %LOCALAPPDATA%\Programs\ZCode
@@ -23,6 +28,7 @@ const installDir = path.resolve(
 const RES = path.join(installDir, 'resources');
 const ASAR = path.join(RES, 'app.asar');
 const TRANSL_DIR = path.join(__dirname, 'translations');
+const SUPPLEMENT = true;
 
 if (!fs.existsSync(ASAR)) {
   console.error('Не найден ' + ASAR);
@@ -108,16 +114,19 @@ const mainCandidates = [];
     else if (p.startsWith('/out/main/') && name.endsWith('.js')) mainCandidates.push(p);
   }
 })(header, '');
-if (!intlChunk) { console.error('Не найден чанк IntlProvider (структура приложения изменилась?).'); process.exit(1); }
+if (!SUPPLEMENT && !intlChunk) { console.error('Не найден чанк IntlProvider (структура приложения изменилась?).'); process.exit(1); }
 let menuChunk = null;
 for (const c of mainCandidates) {
   if (readFile(c).includes('"tray.menu.quit"')) { menuChunk = c; break; }
 }
 if (!menuChunk) { console.error('Не найден чанк нативного меню.'); process.exit(1); }
 const mainChunk = '/out/main/index.js';
-console.log('Чанки: ' + intlChunk + ', ' + menuChunk + ', ' + mainChunk);
+console.log('Режим: ' + (SUPPLEMENT ? 'доппатч (рендерер — официальный перевод)' : 'полный патч каталога'));
+console.log('Чанки: ' + menuChunk + ', ' + mainChunk + (SUPPLEMENT ? '' : ', ' + intlChunk));
 
-// ---------- renderer catalog ----------
+// ---------- renderer catalog (legacy full mode only) ----------
+let newIntlSrc = null;
+if (!SUPPLEMENT) {
 const catSrc = readFile(intlChunk).toString('utf8');
 // locate the locale map  g={"zh-CN":p,"en-US":m}  and resolve the en-US catalog variable
 const gMap = catSrc.match(/=\{"zh-CN":[A-Za-z0-9_$]+,"en-US":([A-Za-z0-9_$]+)\}/);
@@ -164,8 +173,12 @@ const rebuilt = Object.entries(newM).map(([k, v]) => '"' + k + '":`' + v + '`').
   for (const m of rebuilt.matchAll(entryRe)) count++;
   if (count !== Object.keys(enValues).length || count < 100) { console.error('Пересборка каталога теряет ключи; прерывание.'); process.exit(1); }
 }
-const newIntlSrc = catSrc.slice(0, openIdx + 1) + rebuilt + catSrc.slice(closeIdx);
+const newIntlSrc1 = catSrc.slice(0, openIdx + 1) + rebuilt + catSrc.slice(closeIdx);
+newIntlSrc = newIntlSrc1;
 console.log('Каталог интерфейса: переведено ' + applied + ' из ' + Object.keys(enValues).length + ' строк');
+} else {
+  console.log('Рендерер не патчим: официальный «Русский» включается в Настройках → Язык.');
+}
 
 // ---------- native menu ----------
 function translateQuotedMap(srcText, dict) {
@@ -333,11 +346,11 @@ console.log('Диалоги главного процесса: переведе�
 
 // ---------- rebuild asar ----------
 const changed = new Map([
-  [intlChunk, Buffer.from(newIntlSrc, 'utf8')],
   [menuChunk, Buffer.from(menuRes.text, 'utf8')],
   [mainChunk, Buffer.from(mainText, 'utf8')],
   [stylesChunk, Buffer.from(stylesText, 'utf8')],
 ]);
+if (!SUPPLEMENT) changed.set(intlChunk, Buffer.from(newIntlSrc, 'utf8'));
 const newEntries = [];
 let appendOffset = fileSize - contentStart;
 for (const [rel, buf] of changed) {
@@ -434,3 +447,6 @@ try {
 }
 console.log('Откат: просто обновите или переустановите ZCode — установщик вернёт оригинальный архив.');
 console.log('После каждого обновления ZCode запускайте скрипт снова.');
+if (SUPPLEMENT) {
+  console.log('Не забудьте: Настройки → Язык → «Русский» — официальный перевод интерфейса включается там.');
+}
